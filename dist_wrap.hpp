@@ -27,8 +27,7 @@ inline auto UniDist( T const bound ) noexcept { return UniDist(-bound, bound); }
 //----------------
 template <typename T> requires std::is_floating_point_v<T>
 inline bool BerDist( T const prm ) noexcept {
-    using TNL = std::numeric_limits<std::uint64_t>;
-    return UniDist<TNL::lowest(), TNL::max()>() <= TNL::max() * std::clamp<T>(prm, 0, 1);
+    return DistImpl( std::bernoulli_distribution{ std::clamp(prm, 0.0, 1.0) } );
 }
 inline bool BerDist() noexcept { return UniDist<std::uint8_t{0}, std::uint8_t{1}>(); }
 
