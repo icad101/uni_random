@@ -17,9 +17,8 @@ constexpr float cx_f2 = uni_dist<0.f, 1.0000001f>(); //range of 10'000'001 value
 ```
 * *runtime context*
 ```c++
-int rt_i = uni_dist(low_i, high_i) /*<low_i, high_i>()*/; //using std::uniform_int_distribution
+int rt_i = uni_dist(low_i, high_i); //using std::uniform_int_distribution
 float rt_f = uni_dist(static_cast<float>(low_i), static_cast<float>(high_i)); //using std::uniform_real_distribution
-int cx_i = uni_dist<low_i, high_i, force_cx_t::yes>(); //force use of compile-time random (like in constexpr context)
 ```
 * *template type parameters*
 ```c++
@@ -28,6 +27,7 @@ int cx_i = uni_dist<low_i, high_i, force_cx_t::yes>(); //force use of compile-ti
 ```
 * *also supports following types*
 ```c++
+using namespace std::chrono_literals;
 std::chrono::milliseconds rt_ms = uni_dist(0ms, 10ms);
 /*constexpr*/ std::chrono::milliseconds cx_rt_ms = uni_dist<std::chrono::milliseconds>();
 /*constexpr*/ bool cx_rt_b = uni_dist<false, true>() /*(false, true)*/;
@@ -38,10 +38,18 @@ std::chrono::milliseconds rt_ms = uni_dist(0ms, 10ms);
 ```c++
 using std::array;
 //use containers (of size 2) as bounds
-constexpr int tpl_cx_cont = uni_dist<array{low_i, high_i}>(); 
+/*constexpr*/ int cx_rt_tpl_cont = uni_dist<array{low_i, high_i}>(); 
 int rt_cont = uni_dist(array{low_i, high_i}); //also supports vector/pair/tuple
 
-/*constexpr*/ int cx_ao = uni_dist_any_of(array{2, 4, 6, 8}); //get random element of container
+array arr_arg{2, 4, 6, 8};
+/*constexpr int*/ int& cx_rt_ao = uni_dist_any_of(arr_arg); //get random element of container
 ```
+* *other*
+```c++
+///bernouli distribution
+/*constexpr*/ bool cx_rt_bd = ber_dist<0.5, 0>() /*(0.5)*/;
 
+///random sign
+/*constexpr*/ int cx_rt_rs = rand_sign<0.5>() /*(0.5)*/;
+```
 <br>**Compiles on visual studio 17.6 + clang-cl (/std:c++latest) and GCC 11 (-std=c++2b).**
